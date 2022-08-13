@@ -13,6 +13,7 @@ class GameSetup extends JDialog {
     private PlayerType whitePlayerType;
     private PlayerType blackPlayerType;
     private JSpinner searchDepthSpinner;
+    private boolean isTransmision;
 
     private static final String HUMAN_TEXT = "Human";
     private static final String COMPUTER_TEXT = "Computer";
@@ -46,7 +47,7 @@ class GameSetup extends JDialog {
 
         myPanel.add(new JLabel("Search"));
         this.searchDepthSpinner = addLabeledSpinner(myPanel, "Search Depth", new SpinnerNumberModel(4, 0, Integer.MAX_VALUE, 1));
-
+        final JRadioButton transmitionButton = new JRadioButton("Transmition");
         final JButton cancelButton = new JButton("Cancel");
         final JButton okButton = new JButton("OK");
 
@@ -54,6 +55,7 @@ class GameSetup extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 whitePlayerType = whiteComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
                 blackPlayerType = blackComputerButton.isSelected() ? PlayerType.COMPUTER : PlayerType.HUMAN;
+                isTransmision = transmitionButton.isSelected() ? true : false;
                 GameSetup.this.setVisible(false);
             }
         });
@@ -64,7 +66,7 @@ class GameSetup extends JDialog {
                 GameSetup.this.setVisible(false);
             }
         });
-
+        myPanel.add(transmitionButton);
         myPanel.add(cancelButton);
         myPanel.add(okButton);
 
@@ -76,6 +78,10 @@ class GameSetup extends JDialog {
     void promptUser() {
         setVisible(true);
         repaint();
+    }
+
+    boolean getTransmition() {
+        return isTransmision;
     }
 
     boolean isAIPlayer(final Player player) {

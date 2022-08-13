@@ -10,6 +10,7 @@ import com.chess.engine.player.Player;
 import com.chess.engine.player.algorithm.AlfaBeta;
 import com.chess.engine.player.algorithm.MiniMax;
 import com.chess.engine.player.algorithm.MoveStrategy;
+import com.chess.engine.player.algorithm.TransmissionUpdate;
 import com.google.common.collect.Lists;
 import org.checkerframework.checker.units.qual.A;
 
@@ -45,6 +46,16 @@ public class Table extends Observable {
     private Tile destinationTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
+    private String oldBoard = "0000000000000000111111111111111111111111111111110000000000000000";
+    public String getOldBoard() {
+        return oldBoard;
+    }
+
+    public void setOldBoard(String oldBoard) {
+        this.oldBoard = oldBoard;
+    }
+
+
 
     private final Color lightTileColor = Color.decode("#f0ecd4");
     private final Color darkTileColor = Color.decode("#789454");
@@ -229,6 +240,7 @@ public class Table extends Observable {
         protected Move doInBackground() throws Exception {
             final MoveStrategy miniMax = new MiniMax(Table.get().gameSetup.getSearchDepth());
             final MoveStrategy alfaBeta = new AlfaBeta(Table.get().gameSetup.getSearchDepth());
+            final MoveStrategy transmissionUpdate = new TransmissionUpdate(Table.get().getOldBoard());
             final Move bestMove = alfaBeta.execute(Table.get().getChessBoard());
 
             return bestMove;
