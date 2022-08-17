@@ -62,7 +62,7 @@ public class TransmissionUpdate implements MoveStrategy {
     String getNewBoard() {
         String str = "";
         try {
-            URL url = new URL("http://192.168.137.225/");
+            URL url = new URL("http://192.168.1.52/");
             Scanner s = new Scanner(url.openStream());
 
             while (s.hasNext()) {

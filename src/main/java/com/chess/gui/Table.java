@@ -7,10 +7,7 @@ import com.chess.engine.board.Tile;
 import com.chess.engine.pieces.Piece;
 import com.chess.engine.player.MoveTransition;
 import com.chess.engine.player.Player;
-import com.chess.engine.player.algorithm.AlfaBeta;
-import com.chess.engine.player.algorithm.MiniMax;
-import com.chess.engine.player.algorithm.MoveStrategy;
-import com.chess.engine.player.algorithm.TransmissionUpdate;
+import com.chess.engine.player.algorithm.*;
 import com.google.common.collect.Lists;
 import org.checkerframework.checker.units.qual.A;
 
@@ -47,6 +44,27 @@ public class Table extends Observable {
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
     private String oldBoard = "0000000000000000111111111111111111111111111111110000000000000000";
+
+    public Move getLastBlackMove() {
+        return lastBlackMove;
+    }
+
+    public void setLastBlackMove(Move lastBlackMove) {
+        this.lastBlackMove = lastBlackMove;
+    }
+
+    public Move getLastWhiteMove() {
+        return lastWhiteMove;
+    }
+
+    public void setLastWhiteMove(Move lastWhiteMove) {
+        this.lastWhiteMove = lastWhiteMove;
+    }
+
+    private Move lastBlackMove = null;
+    private Move lastWhiteMove = null;
+
+
     public String getOldBoard() {
         return oldBoard;
     }
@@ -240,8 +258,11 @@ public class Table extends Observable {
         protected Move doInBackground() throws Exception {
             final MoveStrategy miniMax = new MiniMax(Table.get().gameSetup.getSearchDepth());
             final MoveStrategy alfaBeta = new AlfaBeta(Table.get().gameSetup.getSearchDepth());
+            final MoveStrategy algUpdate = new AlgUpdate(Table.get().gameSetup.getSearchDepth(),
+                    Table.get().getChessBoard().currentPlayer().getAlliance().isWhite() ?
+                    Table.get().getLastWhiteMove() : Table.get().getLastBlackMove());
             final MoveStrategy transmissionUpdate = new TransmissionUpdate(Table.get().getOldBoard());
-            final Move bestMove = alfaBeta.execute(Table.get().getChessBoard());
+            final Move bestMove = algUpdate.execute(Table.get().getChessBoard());
 
             return bestMove;
         }
